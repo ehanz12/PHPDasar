@@ -27,7 +27,14 @@ if(isset($_POST['submit'])){
         <label for="jurusan">
           Jurusan Siswa :     <input type="text" name="jurusan" required><br>
         </label> 
-        <button type="submit" name="submit">Submit</button>
+        <button type="submit" name="submit">Submit</button><br>
     </form>
+    <div>
+        <?php
+        
+        
+        
+        ?>
+    </div>
 </body>
 </html>
