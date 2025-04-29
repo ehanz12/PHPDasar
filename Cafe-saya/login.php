@@ -3,49 +3,46 @@ session_start();
 $conn = new mysqli('localhost', 'root', 'Rhanss12345', 'cafesaya');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = htmlspecialchars($_POST['username']);
-    $password = htmlspecialchars($_POST['password']);
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-    // Cek apakah password dan konfirmasi password sama
-        // Cek apakah username sudah ada di database
-        $sql = "SELECT * FROM users WHERE username='$username'";
-        $result = $conn->query($sql);
+    // Query untuk mengambil data pengguna
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            $error = "Username sudah digunakan!";
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        
+        // Verifikasi password
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['username'] = $username;
+            header("Location: dashboard.php");
+            exit();
         } else {
-            // Enkripsi password
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-            // Masukkan data pengguna baru ke database
-            $sql = "INSERT INTO users (username, password) VALUES ('$username', '$hashed_password')";
-            if ($conn->query($sql) === TRUE) {
-                $_SESSION['username'] = $username;
-                header("Location: dashboard.php");
-                exit;
-            } else {
-                $error = "Pendaftaran gagal: " . $conn->error;
-            }
+            $error =("Password salah!");
         }
+    } else {
+         $error =("Username tidak ditemukan!");
     }
+}
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Login Animasi</title>
+    <title>Daftar - Cafe Saya</title>
     <link rel="stylesheet" href="style4.css">
 </head>
 <body>
-    
-    <div class="box">
+<div class="box">
         <span class="borderLine"></span>
         <form action="" method="post">
             <div class="inputBox">
-                <h2>Daftar akun</h2>
+                <h2>Masukan Akun</h2>
                 <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
                 <input type="text" required="required" name="username">
                 <span>Username</span>
@@ -57,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <i></i>
             </div>
             <div class="links">
-                <a href="#">sudah punya akun?</a>
-                <a href="index.php">Log-in</a>
+                <a href="#">lupa password</a>
+                <a href="index.php">daftar</a>
             </div>
             <input type="submit" value="Login">
         </form>
