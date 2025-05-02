@@ -12,20 +12,6 @@ $conn = new mysqli($host, $username, $password, $database);
 if ($conn->connect_error) {
     die("Koneksi gagal: " . $conn->connect_error);
 }
-
-if(isset($_POST['submit'])){
-    $username = htmlspecialchars($_POST['username']); 
-    $password = htmlspecialchars($_POST['password']); 
-
-    $sql = "INSERT INTO `users` (`id`, `username`, `password`, `created_at`) VALUES (NULL, '$username', '$password', CURRENT_TIMESTAMP);";
-    $query = $conn->query($sql);
-    if($query == TRUE){
-        echo "Data Berhasil Ditambahkan";
-    }else{
-        echo "Data Gagal Ditambahkan";
-    }    
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +19,7 @@ if(isset($_POST['submit'])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Form</title>
+    <title>Register</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -131,8 +117,26 @@ if(isset($_POST['submit'])){
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
             </div>
-            <button type="submit" class="login-btn">Login</button>
+            <button type="submit" name="submit" class="login-btn">Login</button>
             <a href="#" class="forgot-password">Forgot Password?</a>
+            <?php 
+
+            if(isset($_POST['submit'])){
+                $username = htmlspecialchars($_POST['username']); 
+                $password = htmlspecialchars($_POST['password']); 
+
+                $sql = "INSERT INTO users (username, password) VALUES ('$username', '$password')";
+                $query = $conn->query($sql);
+
+
+                if($query == TRUE){
+                    echo "<center?><strong style='color=green'>Data Berhasil Ditambahkan</strong></center>";
+                }else{
+                    echo "<center><strong style='color=red>Data Gagal Ditambahkan</strong></center>";
+                } 
+            }   
+            ?>
+
         </form>
     </div>
 </body>
