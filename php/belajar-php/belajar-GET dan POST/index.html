@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="bill1">
+    <input type="text" id="bill2">
+    <button type="submit">Hitung</button>
+    <div id="hasil"></div>
+</body>
+<script>
+    let bill1 = document.getElementById("bill1");
+    let bill2 = document.getElementById("bill2");
+    let button = document.querySelector("button");
+
+    button.addEventListener("click", function(){
+        if(parseInt(bill1.value ) && parseInt(bill2.value)){
+            let hasil = bill1.value + bill2.value;
+            document.getElementById("hasil").innerHTML = hasil;
+        }else {
+            alert("masukan angka / angka tidak valid");
+        }
+    })
+</script>
+</html>
